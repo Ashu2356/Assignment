@@ -1,0 +1,4 @@
+---
+container_name: tomcat_container
+image_name: tomcat:9-jdk8
+

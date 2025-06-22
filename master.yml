@@ -1,0 +1,19 @@
+---
+- name: Build WAR
+  hosts: localhost
+  become: yes
+  roles:
+    - build_war
+
+- name: Deploy to Tomcat EC2
+  hosts: tomcat_host
+  become: yes
+  roles:
+    - tomcat_role
+
+- name: Deploy to Docker EC2
+  hosts: docker_host
+  become: yes
+  roles:
+    - docker_role
+

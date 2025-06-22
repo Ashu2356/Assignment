@@ -1,0 +1,4 @@
+---
+git_repo: https://github.com/Shantanumajan6/project.git
+clone_path: "{{ playbook_dir }}/build"
+war_name: LoginWebApp.war

@@ -1,0 +1,45 @@
+---
+- name: Remove old build directory
+  file:
+    path: "{{ clone_path }}"
+    state: absent
+  delegate_to: localhost
+
+- name: Install Git
+  yum:
+    name: git
+    state: present
+  delegate_to: localhost
+
+- name: Install Java
+  yum:
+    name: java-1.8.0-openjdk-devel
+    state: present
+  delegate_to: localhost
+
+- name: Install Maven
+  yum:
+    name: maven
+    state: present
+  delegate_to: localhost
+
+- name: Clone GitHub repo
+  git:
+    repo: "{{ git_repo }}"
+    dest: "{{ clone_path }}"
+    force: yes
+  delegate_to: localhost
+
+- name: Build WAR using Maven
+  command: mvn clean package
+  args:
+    chdir: "{{ clone_path }}"
+  delegate_to: localhost
+
+- name: Copy WAR to files as app.war
+  copy:
+    src: "{{ clone_path }}/target/{{ war_name }}"
+    dest: "{{ playbook_dir }}/files/app.war"
+    remote_src: yes
+  delegate_to: localhost
+

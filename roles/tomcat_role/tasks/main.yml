@@ -1,0 +1,14 @@
+---
+- name: Install Tomcat and Java
+  yum:
+    name:
+      - "{{ tomcat_service }}"
+      - java-1.8.0-openjdk
+    state: present
+  notify: Start Tomcat
+
+- name: Copy WAR to Tomcat webapps
+  copy:
+    src: app.war
+    dest: "{{ webapps_path }}/LoginWebApp.war"
+

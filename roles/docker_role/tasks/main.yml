@@ -1,0 +1,33 @@
+---
+- name: Install Docker
+  yum:
+    name: docker
+    state: present
+
+- name: Start Docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Remove old container if exists
+  command: docker rm -f {{ container_name }}
+  ignore_errors: yes
+
+- name: Run Tomcat container
+  command: docker run -dit --name {{ container_name }} -p 8080:8080 {{ image_name }}
+
+- name: Copy WAR file to /tmp
+  copy:
+    src: app.war
+    dest: /tmp/app.war
+
+- name: Copy WAR into container
+  command: docker cp /tmp/app.war {{ container_name }}:/usr/local/tomcat/webapps/LoginWebApp.war
+
+- name: Wait for Tomcat to deploy WAR
+  wait_for:
+    port: 8080
+    delay: 10
+    timeout: 30
+
